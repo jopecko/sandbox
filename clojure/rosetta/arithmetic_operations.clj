@@ -15,6 +15,13 @@
          (sum-of-squares [1 2]) 5
          (sum-of-squares [2 2]) 8)))
 
+;; TODO refactor so that it uses the sum-of-squares
+;; (defn- sum-of-squares-of-digits [n]
+;;   (reduce + (map #(* % %)
+;;                  (map #(mod % 10)
+;;                       (take-while #(not (zero? %))
+;;                                   (iterate #(quot % 10) n))))))
+
 (defn- sum-of-squares-of-digits [n]
   (sum-of-squares
    (map #(mod % 10)
@@ -32,7 +39,9 @@
   that do not end in 1 are unhappy numbers (or sad numbers[1])."
   [n]
   (loop [curr n digits #{}]
-    (= curr 1)))
+    (if (and (not= curr 1) (not (contains? digits curr)))
+      (recur (sum-of-squares-of-digits curr) (conj digits curr))
+      (= curr 1))))
 
 (defn happy-numbers
   "Returns a lazy sequence of happy numbers
